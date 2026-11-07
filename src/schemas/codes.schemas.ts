@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 export const postSchema = z.object({
-    url: z.url(),
+    url: z.httpUrl(),
     expires_at: z.number().int().positive().max(31).optional()
 })
 
