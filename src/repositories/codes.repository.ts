@@ -1,43 +1,46 @@
 import pool from "../db.js";
 
 export const codesRepo = {
-    async create(url: string, code: string){
+    async create(url: string, code: string, expires_at: string){
         const result = await pool.query(`
-            INSERT INTO codes (code, url)
-            VALUES ($1, $2) RETURNING code
-            `, [code, url]
+            INSERT INTO codes (code, url, expires_at)
+            VALUES ($1, $2, $3) RETURNING code, expires_at
+            `, [code, url, expires_at]
         )
         return result.rows[0]
     },
-
-    async fetch(){
-        const result = await pool.query(`
-            SELECT * FROM codes
-            `)
-
-        return result.rows
-    },
-
-    async remove(id: string){
-        const result = await pool.query(`
-                UPDATE codes
-                SET is_active = false
-                WHERE id = $1
-                RETURNING *
-            `, [id]
-        )
-
-        return result.rows[0]
-    },
-
+    
     async fetchByCode(code: string){
         const result = await pool.query(`
-                SELECT * FROM codes 
+                SELECT id, url FROM codes 
                 WHERE code = $1
+                    AND expires_at > NOW()
             `, [code]
         )
 
-        return result.rows[0]
+        return result
 
+    },
+
+    async fetchStats(code: string, start?: Date, end?: Date){
+
+        let query = `
+            SELECT COUNT(*)::int 
+            FROM codes co
+            JOIN clicks cl
+            ON co.id = cl.code_id
+            WHERE co.code = $1
+        `
+        
+        const params = [code]
+
+        if(start && end){
+            query += ` AND cl.created_at >= $2 AND cl.created_at < $3`;
+            params.push(start.toISOString(), end.toISOString());
+        }
+
+        const result = await pool.query(query, params)
+ 
+        return result.rows[0]
     }
 }

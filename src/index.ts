@@ -1,8 +1,8 @@
 import express from 'express';
 import { pinoHttp } from 'pino-http';
 import { logger } from './logger.js';
-import {route as codeRouter} from './routes/codes.route.js';
-import {route as clickRouter} from './routes/clicks.route.js'
+import {router as codeRouter} from './routes/codes.route.js';
+import {router as clickRouter} from './routes/clicks.route.js'
 // 2. Initialize Express app
 const app = express();
 

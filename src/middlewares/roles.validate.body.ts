@@ -3,6 +3,7 @@ import * as z from 'zod'
 
 export function validateBody<T extends z.ZodType>(schema: T){
     return (req: Request, res: Response, next: NextFunction) => {
+        
         const result = schema.safeParse(req.body)
 
         if(!result.success){

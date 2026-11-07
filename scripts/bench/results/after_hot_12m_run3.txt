@@ -1,0 +1,21 @@
+                                                                                         QUERY PLAN                                                                                         
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=16.61..16.63 rows=1 width=4) (actual time=7.612..7.612 rows=1.00 loops=1)
+   Buffers: shared hit=181
+   ->  Nested Loop  (cost=0.71..16.37 rows=98 width=0) (actual time=0.042..5.805 rows=45479.00 loops=1)
+         Buffers: shared hit=181
+         ->  Index Scan using codes_code_key on codes co  (cost=0.29..8.30 rows=1 width=8) (actual time=0.014..0.015 rows=1.00 loops=1)
+               Index Cond: ((code)::text = '000c2dc'::text)
+               Index Searches: 1
+               Buffers: shared hit=3
+         ->  Index Only Scan using ix_click_code on clicks cl  (cost=0.42..6.95 rows=112 width=8) (actual time=0.026..3.040 rows=45479.00 loops=1)
+               Index Cond: ((code_id = co.id) AND (created_at >= '2025-11-01 00:00:00+08'::timestamp with time zone) AND (created_at < '2026-11-01 00:00:00+08'::timestamp with time zone))
+               Heap Fetches: 0
+               Index Searches: 1
+               Buffers: shared hit=178
+ Planning:
+   Buffers: shared hit=271
+ Planning Time: 0.603 ms
+ Execution Time: 7.661 ms
+(17 rows)
+
