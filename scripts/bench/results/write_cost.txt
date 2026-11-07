@@ -1,0 +1,82 @@
+Timing is on.
+   section    
+--------------
+ sizes_before
+(1 row)
+
+Time: 10.933 ms
+ clicks_table_bytes | ix_click_code_bytes | clicks_table_pretty | ix_click_code_pretty | total_pretty 
+--------------------+---------------------+---------------------+----------------------+--------------
+           52183040 |            31563776 | 50 MB               | 30 MB                | 80 MB
+(1 row)
+
+Time: 5.441 ms
+WITH_INDEX_RUN_1
+BEGIN
+Time: 0.170 ms
+INSERT 0 100000
+Time: 1897.981 ms (00:01.898)
+ROLLBACK
+Time: 0.725 ms
+WITH_INDEX_RUN_2
+BEGIN
+Time: 0.188 ms
+INSERT 0 100000
+Time: 1683.844 ms (00:01.684)
+ROLLBACK
+Time: 0.148 ms
+WITH_INDEX_RUN_3
+BEGIN
+Time: 0.058 ms
+INSERT 0 100000
+Time: 1385.586 ms (00:01.386)
+ROLLBACK
+Time: 0.112 ms
+DROP INDEX
+Time: 19.605 ms
+WITHOUT_INDEX_RUN_1
+BEGIN
+Time: 0.126 ms
+INSERT 0 100000
+Time: 990.493 ms
+ROLLBACK
+Time: 0.189 ms
+WITHOUT_INDEX_RUN_2
+BEGIN
+Time: 0.295 ms
+INSERT 0 100000
+Time: 1020.825 ms (00:01.021)
+ROLLBACK
+Time: 0.103 ms
+WITHOUT_INDEX_RUN_3
+BEGIN
+Time: 0.041 ms
+INSERT 0 100000
+Time: 1062.568 ms (00:01.063)
+ROLLBACK
+Time: 0.221 ms
+CREATE INDEX
+Time: 774.685 ms
+VACUUM
+Time: 241.490 ms
+   section   
+-------------
+ sizes_after
+(1 row)
+
+Time: 0.206 ms
+ clicks_table_bytes | ix_click_code_bytes | clicks_table_pretty | ix_click_code_pretty | total_pretty 
+--------------------+---------------------+---------------------+----------------------+--------------
+           52183040 |            31563776 | 50 MB               | 30 MB                | 80 MB
+(1 row)
+
+Time: 0.294 ms
+
+SUMMARY
+clicks table bytes: 52183040 (50 MB)
+ix_click_code bytes: 31563776 (30 MB)
+total bytes: 83746816 (80 MB)
+
+index | median insert time (ms) | rows/sec | index size % of table size
+yes   | 1683.844 | 59388 | 60.49%
+no    | 1020.825 | 97960 | n/a
