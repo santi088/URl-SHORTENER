@@ -14,7 +14,6 @@ app.use(pinoHttp({ logger }));
 
 
 app.use('/api/code', codeRouter)
-app.use('/api/clicks', clickRouter)
 
 app.listen(3000, () => {
   logger.info('Server is running on port 3000');
