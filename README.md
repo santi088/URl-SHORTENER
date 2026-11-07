@@ -87,7 +87,20 @@ Caveats:
 
 ### The cost of the index
 
-TODO: fill in from the write-cost benchmark.
+Measured on the same 1M-row benchmark database. Inserting 100,000 clicks in one
+statement (random timestamps, skewed codes), median of 3 runs:
+
+| Index | Insert 100k clicks | Rows/sec | Index size vs table size |
+|---|---|---|---|
+| No | 1,021 ms | 97,960 | n/a |
+| Yes | 1,684 ms | 59,388 | 60% (index 30 MB, table 50 MB) |
+
+The index makes inserts about 1.65x slower in bulk, roughly 6.6 µs extra per row.
+A stats query on a hot code saves about 20 ms at 1M rows, so the index pays for
+itself if there is at least one stats query per ~3,000 clicks. Caveats: bulk
+insert, not per-request inserts (where network and commit time dominate); random
+timestamps, which likely overstate the cost compared with real, time-ordered
+clicks.
 
 | Index | Insert 100k clicks | Rows/sec | Index size vs table size |
 |---|---|---|---|
