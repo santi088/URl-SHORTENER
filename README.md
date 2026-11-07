@@ -121,10 +121,7 @@ Integration tests (Vitest + supertest) run against a separate real Postgres test
 ```bash
 npm test
 ```
-
-## Running locally
-
-TODO: env vars (`DATABASE_URL`, port), how to run migrations, `npm run dev`.
+Clicks are written far more often than stats are read, so the index is a deliberate trade: a small per-insert cost (about 1.65x in bulk, roughly 6.6 µs per row) to keep stats queries from scaling with total table size, which the requirement “stats stay fast at huge scale” demands. Break-even is about one stats query per 3,000 clicks on total work; if click writes ever become the bottleneck, batching or a stored rollup are the next options.
 
 ## Not built
 
